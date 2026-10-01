@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="description" content="IT Security Checkup — a practical security review workspace by Nikita Rysiev." />
+  <title>IT Security Checkup · NR.</title>
+  <link rel="icon" href="../it-workspace/favicon.svg" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+  <div class="shell">
+    <aside class="sidebar">
+      <a class="brand" href="../"><b>nr<span>.</span></b><span>SECURITY CHECKUP<small>IT SUPPORT EDITION</small></span></a>
+      <div class="workspace"><span class="avatar">04</span><div><strong>Security workspace</strong><small>Local review</small></div><i class="dot"></i></div>
+      <nav aria-label="Security sections">
+        <a class="nav-item active" href="#overview">◉ <span>Overview</span></a>
+        <a class="nav-item" href="#checklist">✓ <span>Checklist</span></a>
+        <a class="nav-item" href="#devices">▣ <span>Devices</span></a>
+      </nav>
+      <div class="sidebar-note"><strong>Reduce avoidable risk.</strong><p>Review the basics. Record the action. Keep the handover clear.</p><small>IT SUPPORT → SECURITY</small></div>
+    </aside>
+    <div class="main-shell">
+      <header class="topbar"><div class="breadcrumb">Security Checkup <span>/</span> <strong id="crumb">Overview</strong></div><div class="actions"><button id="lang" class="quiet">◎ EN <span>⌄</span></button><button id="theme" class="icon">◐</button></div></header>
+      <main id="main">
+        <section id="overview" class="hero"><div><p class="eyebrow">04 / IT SECURITY</p><h1>Good support starts<br><em>with safer systems.</em></h1><p class="lead">A practical review of endpoint basics, access and recovery readiness for an IT support team.</p><div class="hero-actions"><a class="button primary" href="#checklist">Start review ↗</a><button class="button secondary" id="reset">Reset demo</button></div></div><div class="score-card"><div class="score-ring" id="ring"><strong id="score">0%</strong></div><div><span class="label">SECURITY POSTURE</span><h2 id="score-label">Review in progress</h2><p id="score-copy">Complete the checklist to see the current posture.</p></div></div></section>
+        <section class="stats"><article><span>OPEN ITEMS</span><strong id="open">0</strong><small>Require follow-up</small></article><article><span>READY</span><strong id="ready">0</strong><small>Checks completed</small></article><article><span>DEVICES</span><strong id="device-count">4</strong><small>Tracked locally</small></article></section>
+        <section id="checklist" class="panel"><div class="panel-head"><div><p class="eyebrow">01 / REVIEW</p><h2>Security checklist</h2><p>Record the current state, then leave a clear next action for the team.</p></div><div class="filter"><button class="filter-button active" data-filter="all">All</button><button class="filter-button" data-filter="open">Open</button><button class="filter-button" data-filter="done">Done</button></div></div><div id="checks" class="checks"></div></section>
+        <section id="devices" class="panel"><div class="panel-head"><div><p class="eyebrow">02 / INVENTORY</p><h2>Device readiness</h2><p>Keep a lightweight record of the devices that need attention.</p></div><span class="pill">LOCAL DEMO</span></div><div id="devices-list" class="device-grid"></div></section>
+        <footer><span>nr. / Support with security in mind.</span><a href="../">Back to portfolio ↗</a></footer>
+      </main>
+    </div>
+  </div>
+  <script src="app.js"></script>
+</body>
+</html>
