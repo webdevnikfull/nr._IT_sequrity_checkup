@@ -1,1 +1,46 @@
-(()=>{const KEY='nr-security-checkup-v1';const checks=[['MFA enabled for privileged accounts','Confirm administrator and remote access accounts use a second factor.','Access'],['Critical updates reviewed','Record the last patch review and flag devices that need attention.','Devices'],['Least privilege confirmed','Check that users have only the access required for their role.','Access'],['Backup restore point verified','Confirm a recent restore point exists and the recovery owner is known.','Recovery'],['Phishing report path documented','Make the reporting route visible to every user.','Awareness'],['Endpoint protection active','Check protection status and the last recorded update.','Devices']];const devices=[['NR-LT-001','ThinkPad T14','Windows workstation',78],['NR-PC-002','Dell OptiPlex','Office workstation',92],['NR-PR-003','Office printer','Shared peripheral',54],['NR-NW-004','Network switch','Infrastructure',86]];let state=JSON.parse(localStorage.getItem(KEY)||'null')||{done:[],theme:localStorage.getItem('nr-security-theme')||'light',lang:'en'};const $=s=>document.querySelector(s);const save=()=>localStorage.setItem(KEY,JSON.stringify(state));const t=()=>state.lang==='pl';const render=()=>{document.documentElement.dataset.theme=state.theme;$('#lang').innerHTML=t()?'◎ PL <span>⌄</span>':'◎ EN <span>⌄</span>';$('#crumb').textContent=t()?'Przegląd':'Overview';document.querySelector('.hero h1').innerHTML=t()?'Bezpieczniejsze systemy.<br><em>Spokojniejsza praca.</em>':'Good support starts<br><em>with safer systems.</em>';document.querySelector('.lead').textContent=t()?'Praktyczny przegląd podstaw bezpieczeństwa, dostępu i gotowości do odtworzenia dla zespołu IT Support.':'A practical review of endpoint basics, access and recovery readiness for an IT support team.';$('#checks').innerHTML=checks.map((c,i)=>'<article class="check '+(state.done.includes(i)?'done':'')+'" data-status="'+(state.done.includes(i)?'done':'open')+'"><span class="check-mark">'+(state.done.includes(i)?'✓':'○')+'</span><div><h3>'+ (t()?['MFA dla kont uprzywilejowanych','Przegląd aktualizacji krytycznych','Weryfikacja minimalnych uprawnień','Punkt odtworzenia kopii zapasowej','Ścieżka zgłaszania phishingu','Aktywna ochrona urządzeń'][i]:c[0])+'</h3><p>'+ (t()?['Potwierdź drugi składnik dla kont administracyjnych i zdalnego dostępu.','Zapisz ostatni przegląd poprawek i oznacz urządzenia wymagające uwagi.','Sprawdź, czy użytkownicy mają tylko dostęp potrzebny do roli.','Potwierdź aktualny punkt odtworzenia i właściciela procesu.','Uczyń ścieżkę zgłoszenia widoczną dla każdego użytkownika.','Sprawdź stan ochrony i ostatnią aktualizację.'][i]:c[1])+'</p></div><button data-check="'+i+'">'+(state.done.includes(i)?(t()?'Cofnij':'Undo'):(t()?'Oznacz':'Mark done'))+'</button><span class="tag">'+c[2]+'</span></article>').join('');const done=state.done.length;const percent=Math.round(done/checks.length*100);$('#score').textContent=percent+'%';$('#ring').style.setProperty('--p',percent+'%');$('#open').textContent=checks.length-done;$('#ready').textContent=done;$('#score-label').textContent=t()?(done===checks.length?'Przegląd zakończony':'Przegląd w toku'):(done===checks.length?'Review complete':'Review in progress');$('#score-copy').textContent=t()?'Postęp zapisuje się lokalnie w tej przeglądarce.':'Progress is saved locally in this browser.';$('#device-count').textContent=devices.length;$('#devices-list').innerHTML=devices.map(d=>'<article class="device"><div class="device-top"><strong>'+d[1]+'</strong><span class="tag">'+d[0]+'</span></div><small>'+d[2]+'</small><div class="meter"><i style="width:'+d[3]+'%"></i></div><div class="device-actions"><span>'+d[3]+'% readiness</span><button>View notes ↗</button></div></article>').join('')};document.addEventListener('click',e=>{const b=e.target.closest('[data-check]');if(b){const i=+b.dataset.check;state.done=state.done.includes(i)?state.done.filter(x=>x!==i):[...state.done,i];save();render()}if(e.target.id==='reset'){state.done=[];save();render()}if(e.target.id==='theme'){state.theme=state.theme==='dark'?'light':'dark';localStorage.setItem('nr-security-theme',state.theme);render()}if(e.target.id==='lang'){state.lang=state.lang==='en'?'pl':'en';save();render()}const f=e.target.closest('[data-filter]');if(f){document.querySelectorAll('.filter-button').forEach(x=>x.classList.toggle('active',x===f));document.querySelectorAll('.check').forEach(x=>x.hidden=f.dataset.filter!=='all'&&x.dataset.status!==f.dataset.filter)}});render()})();
+(() => {
+  'use strict';
+  const KEY='nr-security-checkup-v1';
+  const dictionary=window.NRSecurityLanguages;
+  const $=selector=>document.querySelector(selector);
+  const store={get(key){try{return localStorage.getItem(key)}catch{return null}},set(key,value){try{localStorage.setItem(key,value)}catch{}}};
+  let saved;try{saved=JSON.parse(store.get(KEY)||'null')}catch{saved=null}
+  const preferred=store.get('nr-studio-language');
+  const state={done:Array.isArray(saved?.done)?[...new Set(saved.done.filter(i=>Number.isInteger(i)&&i>=0&&i<6))]:[],theme:store.get('qa-portfolio-theme')||store.get('nr-security-theme')||saved?.theme||'light',lang:dictionary[saved?.lang]?saved.lang:dictionary[preferred]?preferred:'en'};
+  if(!['light','dark'].includes(state.theme))state.theme='light';
+  const checks=[['mfa','access'],['updates','categoryDevices'],['privilege','access'],['backup','recovery'],['phishing','awareness'],['protection','categoryDevices']];
+  const devices=[['NR-LT-001','ThinkPad T14','windows',78],['NR-PC-002','Dell OptiPlex','office',92],['NR-PR-003','Office printer','shared',54],['NR-NW-004','Network switch','infrastructure',86]];
+  let filter='all';
+  const t=key=>dictionary[state.lang]?.[key]||dictionary.en[key]||key;
+  const save=()=>store.set(KEY,JSON.stringify(state));
+  function render(){
+    document.documentElement.lang=state.lang;
+    document.documentElement.dataset.theme=state.theme;
+    document.querySelector('meta[name="description"]').content=t('meta');
+    document.querySelectorAll('[data-i]').forEach(el=>{el.textContent=t(el.dataset.i)});
+    $('#crumb').textContent=t('navOverview');
+    $('#hero-title').innerHTML=t('heroTitle');
+    $('#checks').innerHTML=checks.map(([key,category],i)=>{
+      const done=state.done.includes(i);
+      return `<article class="check ${done?'done':''}" data-status="${done?'done':'open'}"><span class="check-mark" aria-hidden="true">${done?'✓':'○'}</span><div><h3>${t(key)}</h3><p>${t(key+'Desc')}</p></div><button type="button" data-check="${i}" aria-pressed="${done}">${t(done?'undo':'markDone')}</button><span class="tag">${t(category)}</span></article>`;
+    }).join('');
+    const count=state.done.length,percent=Math.round(count/checks.length*100);
+    $('#score').textContent=percent+'%';$('#ring').style.setProperty('--p',percent+'%');
+    $('#open').textContent=checks.length-count;$('#ready').textContent=count;$('#device-count').textContent=devices.length;
+    $('#score-label').textContent=t(count===checks.length?'reviewComplete':'reviewInProgress');
+    $('#score-copy').textContent=t('scoreCopy');
+    $('#devices-list').innerHTML=devices.map(([tag,name,type,percent])=>`<article class="device"><div class="device-top"><strong>${name}</strong><span class="tag">${tag}</span></div><small>${t(type)}</small><div class="meter"><i style="width:${percent}%"></i></div><div class="device-actions"><span>${percent}% ${t('readiness')}</span></div></article>`).join('');
+    document.querySelectorAll('.filter-button').forEach(button=>button.classList.toggle('active',button.dataset.filter===filter));
+    document.querySelectorAll('.check').forEach(row=>row.hidden=filter!=='all'&&row.dataset.status!==filter);
+  }
+  document.addEventListener('click',event=>{
+    const check=event.target.closest('[data-check]');
+    if(check){const i=Number(check.dataset.check);state.done=state.done.includes(i)?state.done.filter(x=>x!==i):[...state.done,i];save();render();return}
+    if(event.target.closest('#reset')){state.done=[];save();render();return}
+    const button=event.target.closest('[data-filter]');
+    if(button){filter=button.dataset.filter;render()}
+  });
+  window.addEventListener('nr-language-select',event=>{if(!dictionary[event.detail])return;state.lang=event.detail;store.set('nr-studio-language',state.lang);save();render()});
+  window.addEventListener('nr-theme-toggle',()=>{state.theme=state.theme==='dark'?'light':'dark';store.set('nr-security-theme',state.theme);store.set('qa-portfolio-theme',state.theme);save();render()});
+  render();
+})();
